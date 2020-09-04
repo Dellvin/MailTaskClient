@@ -19,10 +19,10 @@ public:
 
     explicit UI(std::string &&ServerIP, uint32_t ServerPort);
 
-    void start();
+    int start();
 
 private:
-    void init();
+    int init();
     void eventLoop();
     static void move(buffer *ptr,int pos);
     static void checkEOM(buffer *ptr);

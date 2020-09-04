@@ -13,27 +13,28 @@
 
 UI::UI(std::string &&ServerIP, uint32_t ServerPort) : ip(std::move(ServerIP)), port(ServerPort) {}
 
-void UI::start() {
-    init();
+int UI::start() {
+    uint8_t errorCode=init();
+    if(errorCode)return errorCode;
     eventLoop();
 }
 
-void UI::init() {
+int UI::init() {
     sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     if (!inet_aton(ip.c_str(), &(addr.sin_addr))) {
         std::cerr << "Invalid Ip address" << std::endl;
-        return;
+        return (1);
     }
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1) {
         std::cerr << "Socket error" << std::endl;
-        return;
+        return (2);
     }
     if (connect(sock, (sockaddr *) &addr, sizeof(addr))) {
         std::cerr << "Connection error" << std::endl;
-        return;
+        return (3);
     }
     std::cout << "You successfully connected to server!" << std::endl;
 }
